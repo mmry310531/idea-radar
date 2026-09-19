@@ -1,0 +1,34 @@
+name: a
+on:
+  schedule:
+    - cron: "37 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: a
+  cancel-in-progress: false
+jobs:
+  j:
+    runs-on: ubuntu-latest
+    timeout-minutes: 58
+    env:
+      TZ: Asia/Taipei
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q requests
+      - run: python a.py -t 45 > /dev/null
+      - if: hashFiles('d/a/3.gz') != ''
+        run: |
+          gh release view f >/dev/null 2>&1 || gh release create f --title f --notes f
+          gh release upload f d/a/3.gz --clobber
+      - run: |
+          git config user.name u
+          git config user.email u@users.noreply.github.com
+          git add d
+          git diff --staged --quiet || git commit -qm u
+          for i in 1 2 3; do git pull -q --rebase --autostash && git push -q && break; sleep 5; done

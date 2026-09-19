@@ -1,0 +1,50 @@
+name: archive
+
+# 歷史資料庫：每小時跑 45 分鐘，一點一點把過去的資料補齊，補完之後只追新的。
+# repo 是公開的，GitHub Actions 分鐘數不限。
+on:
+  schedule:
+    - cron: "37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: archive
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 58
+    env:
+      TZ: Asia/Taipei
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install --quiet requests
+
+      - name: run archive
+        run: python archive.py --budget 45
+
+      # 法規全文太大，不進 git 歷史；放在 Release 裡，每週覆蓋一次
+      - name: upload law fulltext
+        if: hashFiles('archive/law/fulltext.jsonl.gz') != ''
+        run: |
+          gh release view law-fulltext >/dev/null 2>&1 || \
+            gh release create law-fulltext --title "全國法規全文（每週更新）" --notes "archive.py 產生；jsonl.gz，一行一部法規"
+          gh release upload law-fulltext archive/law/fulltext.jsonl.gz --clobber
+
+      - name: commit
+        run: |
+          git config user.name  "archive-bot"
+          git config user.email "archive-bot@users.noreply.github.com"
+          git add archive
+          git diff --staged --quiet || git commit -m "archive $(date +%F_%H%M)"
+          for i in 1 2 3; do git pull --rebase --autostash && git push && break; sleep 5; done

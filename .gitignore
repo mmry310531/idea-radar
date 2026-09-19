@@ -1,3 +1,5 @@
 __pycache__/
-*.pyc
-*.log
+out/
+d/a/3.gz
+p.bat
+v.py
