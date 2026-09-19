@@ -1,0 +1,61 @@
+[
+  {
+    "name": "行政院公報-最新",
+    "type": "list",
+    "url": "https://gazette.nat.gov.tw/egFront/",
+    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>([^<]{6,80})</a>",
+    "why": "法規修正條文與附表的最佳來源。附表就是家族 A 的原料。"
+  },
+  {
+    "name": "全國法規資料庫-最新訊息",
+    "type": "list",
+    "url": "https://law.moj.gov.tw/News/NewsList.aspx?tid=1",
+    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>([^<]{6,120})</a>",
+    "why": "Claude 的 WebFetch 抓不到這個站（黑名單），但一般瀏覽器可以。這是解鎖來源。"
+  },
+  {
+    "name": "內政部消防署-法規動態",
+    "type": "list",
+    "url": "https://www.nfa.gov.tw/cht/index.php?code=list&ids=23",
+    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
+    "why": "#7 的主管機關。2028-06-22 消防設備暫行人員落日，任何鬆動都會先出現在這裡。"
+  },
+  {
+    "name": "內政部消防署-行政公告",
+    "type": "list",
+    "url": "https://www.nfa.gov.tw/cht/index.php?code=list&ids=21",
+    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
+    "why": "同上，行政公告那一欄。"
+  },
+  {
+    "name": "智財局-首頁",
+    "type": "list",
+    "url": "https://www.tipo.gov.tw/tw/",
+    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
+    "why": "#12。原布告欄網址 404，先用首頁撈最新消息；集管費率審議公告會出現在這裡。"
+  },
+  {
+    "name": "智財局-著作權主題網",
+    "type": "list",
+    "url": "https://www.tipo.gov.tw/copyright-tw/",
+    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
+    "why": "#12。著作權主題網，集管團體費率審議結果的主要落點。"
+  },
+  {
+    "name": "財政部法規-執行業務者費用標準",
+    "type": "list",
+    "url": "https://law-out.mof.gov.tw/LawQuery.aspx",
+    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
+    "why": "每年公告一次。程式設計 20% / 著作人 30% / 自行出版 75%，分類一次決定 55 個百分點。"
+  },
+  {
+    "name": "彰化縣消防局-暫行人員執業執照清冊",
+    "type": "numbers",
+    "enabled": false,
+    "url": "https://www.chfd.gov.tw/form/index.aspx?Parser=3%2C9%2C324",
+    "number_re": {
+      "清冊筆數": "共\\s*(\\d[\\d,]*)\\s*筆"
+    },
+    "why": "J-1 時間序列。落日前逐年往下掉的人數，只能靠比別人早開始記錄取得。"
+  }
+]
