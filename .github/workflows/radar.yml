@@ -1,12 +1,18 @@
 name: radar
-#test
+
 on:
   schedule:
-    # UTC 週一 16:17 = 台北週二 00:17
-    # 比 Claude 的研究輪（台北週二 03:00）早約 3 小時，GitHub 的排程常延遲，留緩衝。
-    # 分鐘刻意不用 :00，整點是全世界排程擠在一起的時候，最容易被延遲或跳過。
+    # 每小時第 7 分：只「抓」，新東西先存進 state.json，不寄信
+    #（PTT 熱門版一小時就洗掉一頁，所以要高頻；政府網站在 sources.json 設 every_hours: 24，不會每小時被打）
+    - cron: "7 * * * *"
+    # UTC 週一 16:17 = 台北週二 00:17：整理一週累積的東西成摘要並寄信
+    # 比 Claude 的研究輪（台北週二 03:00）早約 3 小時
     - cron: "17 16 * * 1"
-  workflow_dispatch:        # Actions 頁面上的「Run workflow」按鈕，手動跑一次
+  workflow_dispatch:        # 手動按 Run workflow = 立刻出一份摘要
+    inputs:
+      mode:
+        description: "digest = 出摘要並寄信；collect = 只抓"
+        default: digest
 
 permissions:
   contents: write           # 讓它能把 state.json 與 out/ 提交回 repo
@@ -33,20 +39,23 @@ jobs:
 
       - name: run radar
         id: radar
-        run: python radar.py --out out
+        env:
+          MODE: ${{ (github.event.schedule == '17 16 * * 1' || (github.event_name == 'workflow_dispatch' && inputs.mode != 'collect')) && 'digest' || 'collect' }}
+        run: python radar.py --$MODE --out out
 
       - name: commit results
         run: |
           git config user.name  "radar-bot"
           git config user.email "radar-bot@users.noreply.github.com"
           git add -A out state.json sources.json
-          git diff --staged --quiet || git commit -m "radar $(date +%F)"
+          git diff --staged --quiet || git commit -m "radar $(date +%F_%H%M)"
+          git pull --rebase --autostash || true
           git push
 
       # 寄一份摘要到信箱，讓 Claude 每週的研究輪用 Gmail 讀到（repo 保持私人）。
       # 沒設 MAIL_USER / MAIL_APP_PASSWORD 這兩個 secret 就自動跳過，不會報錯。
       - name: email digest
-        if: env.MAIL_USER != ''
+        if: env.MAIL_USER != '' && steps.radar.outputs.digest != ''
         env:
           MAIL_APP_PASSWORD: ${{ secrets.MAIL_APP_PASSWORD }}
           DIGEST: ${{ steps.radar.outputs.digest }}
@@ -58,7 +67,7 @@ jobs:
           body = open(os.environ["DIGEST"], encoding="utf-8").read()
           tag = "" if os.environ.get("FAILED", "0") == "0" else f" ⚠{os.environ['FAILED']} 個來源失敗"
           msg = MIMEText(body, "plain", "utf-8")
-          msg["Subject"] = f"[idea-radar] 法規雷達摘要 {datetime.date.today()}{tag}"
+          msg["Subject"] = f"[idea-radar] 雷達摘要 {datetime.date.today()}{tag}"
           msg["From"] = msg["To"] = os.environ["MAIL_USER"]
           with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
               s.login(os.environ["MAIL_USER"], os.environ["MAIL_APP_PASSWORD"])

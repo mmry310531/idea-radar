@@ -1,61 +1,245 @@
 [
   {
     "name": "行政院公報-最新",
+    "tier": "官方",
     "type": "list",
+    "every_hours": 24,
     "url": "https://gazette.nat.gov.tw/egFront/",
-    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>([^<]{6,80})</a>",
+    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
+    "keywords": "law",
     "why": "法規修正條文與附表的最佳來源。附表就是家族 A 的原料。"
   },
   {
     "name": "全國法規資料庫-最新訊息",
+    "tier": "官方",
     "type": "list",
+    "every_hours": 24,
     "url": "https://law.moj.gov.tw/News/NewsList.aspx?tid=1",
-    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>([^<]{6,120})</a>",
-    "why": "Claude 的 WebFetch 抓不到這個站（黑名單），但一般瀏覽器可以。這是解鎖來源。"
+    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
+    "keywords": "law",
+    "why": "Claude 的 WebFetch 抓不到這個站，但一般瀏覽器可以。"
   },
   {
     "name": "內政部消防署-法規動態",
+    "tier": "官方",
     "type": "list",
+    "every_hours": 24,
     "url": "https://www.nfa.gov.tw/cht/index.php?code=list&ids=23",
     "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
-    "why": "#7 的主管機關。2028-06-22 消防設備暫行人員落日，任何鬆動都會先出現在這裡。"
+    "keywords": "law",
+    "why": "#7 的主管機關。2028-06-22 消防設備暫行人員落日。"
   },
   {
     "name": "內政部消防署-行政公告",
+    "tier": "官方",
     "type": "list",
+    "every_hours": 24,
     "url": "https://www.nfa.gov.tw/cht/index.php?code=list&ids=21",
     "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
-    "why": "同上，行政公告那一欄。"
+    "keywords": "law",
+    "why": "同上。"
   },
   {
     "name": "智財局-首頁",
+    "tier": "官方",
     "type": "list",
+    "every_hours": 24,
     "url": "https://www.tipo.gov.tw/tw/",
     "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
-    "why": "#12。原布告欄網址 404，先用首頁撈最新消息；集管費率審議公告會出現在這裡。"
-  },
-  {
-    "name": "智財局-著作權主題網",
-    "type": "list",
-    "url": "https://www.tipo.gov.tw/copyright-tw/",
-    "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
-    "why": "#12。著作權主題網，集管團體費率審議結果的主要落點。"
+    "keywords": "law",
+    "why": "#12。集管費率審議公告會出現在這裡。"
   },
   {
     "name": "財政部法規-執行業務者費用標準",
+    "tier": "官方",
     "type": "list",
+    "every_hours": 24,
     "url": "https://law-out.mof.gov.tw/LawQuery.aspx",
     "item_re": "<a[^>]+href=\"([^\"]+)\"[^>]*>\\s*([^<]{6,120}?)\\s*</a>",
-    "why": "每年公告一次。程式設計 20% / 著作人 30% / 自行出版 75%，分類一次決定 55 個百分點。"
+    "keywords": "law",
+    "why": "每年公告一次，分類一次決定 55 個百分點。"
+  },
+  {
+    "name": "新聞：收費標準 修正",
+    "tier": "新聞",
+    "type": "feed",
+    "every_hours": 24,
+    "url": "https://news.google.com/rss/search?q=%E6%94%B6%E8%B2%BB%E6%A8%99%E6%BA%96%20%E4%BF%AE%E6%AD%A3%20when%3A7d&hl=zh-TW&gl=TW&ceid=TW:zh-Hant",
+    "keywords": "all",
+    "why": "家族 A：收費表改版。"
+  },
+  {
+    "name": "新聞：落日條款 業者",
+    "tier": "新聞",
+    "type": "feed",
+    "every_hours": 24,
+    "url": "https://news.google.com/rss/search?q=%E8%90%BD%E6%97%A5%E6%A2%9D%E6%AC%BE%20%E6%A5%AD%E8%80%85%20when%3A7d&hl=zh-TW&gl=TW&ceid=TW:zh-Hant",
+    "keywords": "all",
+    "why": "H-1：帶日期的時間訊號。"
+  },
+  {
+    "name": "新聞：過渡期 屆滿 業者",
+    "tier": "新聞",
+    "type": "feed",
+    "every_hours": 24,
+    "url": "https://news.google.com/rss/search?q=%E9%81%8E%E6%B8%A1%E6%9C%9F%20%E5%B1%86%E6%BB%BF%20%E6%A5%AD%E8%80%85%20when%3A7d&hl=zh-TW&gl=TW&ceid=TW:zh-Hant",
+    "keywords": "all",
+    "why": "H-1。"
+  },
+  {
+    "name": "新聞：超收 消保官",
+    "tier": "新聞",
+    "type": "feed",
+    "every_hours": 24,
+    "url": "https://news.google.com/rss/search?q=%E8%B6%85%E6%94%B6%20%E6%B6%88%E4%BF%9D%E5%AE%98%20when%3A7d&hl=zh-TW&gl=TW&ceid=TW:zh-Hant",
+    "keywords": "all",
+    "why": "家族 A／B：有人被多收錢，而且已經鬧到官方。"
+  },
+  {
+    "name": "新聞：新制上路 罰款",
+    "tier": "新聞",
+    "type": "feed",
+    "every_hours": 24,
+    "url": "https://news.google.com/rss/search?q=%E6%96%B0%E5%88%B6%E4%B8%8A%E8%B7%AF%20%E7%BD%B0%E6%AC%BE%20when%3A7d&hl=zh-TW&gl=TW&ceid=TW:zh-Hant",
+    "keywords": "all",
+    "why": "義務＋罰則＝動機強度。"
+  },
+  {
+    "name": "新聞：公播 著作權 店家",
+    "tier": "新聞",
+    "type": "feed",
+    "every_hours": 24,
+    "url": "https://news.google.com/rss/search?q=%E5%85%AC%E6%92%AD%20%E8%91%97%E4%BD%9C%E6%AC%8A%20%E5%BA%97%E5%AE%B6%20when%3A7d&hl=zh-TW&gl=TW&ceid=TW:zh-Hant",
+    "keywords": "all",
+    "why": "#12 店家播音樂。"
+  },
+  {
+    "name": "新聞：時間電價",
+    "tier": "新聞",
+    "type": "feed",
+    "every_hours": 24,
+    "url": "https://news.google.com/rss/search?q=%E6%99%82%E9%96%93%E9%9B%BB%E5%83%B9%20when%3A7d&hl=zh-TW&gl=TW&ceid=TW:zh-Hant",
+    "keywords": "all",
+    "why": "#15。"
+  },
+  {
+    "name": "新聞：消防安全設備 檢修 費用",
+    "tier": "新聞",
+    "type": "feed",
+    "every_hours": 24,
+    "url": "https://news.google.com/rss/search?q=%E6%B6%88%E9%98%B2%E5%AE%89%E5%85%A8%E8%A8%AD%E5%82%99%20%E6%AA%A2%E4%BF%AE%20%E8%B2%BB%E7%94%A8%20when%3A7d&hl=zh-TW&gl=TW&ceid=TW:zh-Hant",
+    "keywords": "all",
+    "why": "#7。"
+  },
+  {
+    "name": "新聞：履約保證",
+    "tier": "新聞",
+    "type": "feed",
+    "every_hours": 24,
+    "url": "https://news.google.com/rss/search?q=%E5%B1%A5%E7%B4%84%E4%BF%9D%E8%AD%89%20when%3A7d&hl=zh-TW&gl=TW&ceid=TW:zh-Hant",
+    "keywords": "all",
+    "why": "#13。"
+  },
+  {
+    "name": "新聞：調解 爭議 免費",
+    "tier": "新聞",
+    "type": "feed",
+    "every_hours": 24,
+    "url": "https://news.google.com/rss/search?q=%E8%AA%BF%E8%A7%A3%20%E7%88%AD%E8%AD%B0%20%E5%85%8D%E8%B2%BB%20when%3A7d&hl=zh-TW&gl=TW&ceid=TW:zh-Hant",
+    "keywords": "all",
+    "why": "#14。"
+  },
+  {
+    "name": "PTT：Lifeismoney",
+    "tier": "社群",
+    "type": "feed",
+    "every_hours": 1,
+    "url": "https://www.ptt.cc/atom/Lifeismoney.xml",
+    "keywords": "pain",
+    "why": "省錢版：價差、被多收、比價——家族 B 的溫床。"
+  },
+  {
+    "name": "PTT：home-sale",
+    "tier": "社群",
+    "type": "feed",
+    "every_hours": 1,
+    "url": "https://www.ptt.cc/atom/home-sale.xml",
+    "keywords": "pain",
+    "why": "房地產：規費、仲介費、稅費怎麼算。"
+  },
+  {
+    "name": "PTT：e-shopping",
+    "tier": "社群",
+    "type": "feed",
+    "every_hours": 1,
+    "url": "https://www.ptt.cc/atom/e-shopping.xml",
+    "keywords": "pain",
+    "why": "網購糾紛與退費。"
+  },
+  {
+    "name": "PTT：car",
+    "tier": "社群",
+    "type": "feed",
+    "every_hours": 1,
+    "url": "https://www.ptt.cc/atom/car.xml",
+    "keywords": "pain",
+    "why": "汽車：罰單、規費、驗車、保險。"
+  },
+  {
+    "name": "PTT：Insurance",
+    "tier": "社群",
+    "type": "feed",
+    "every_hours": 1,
+    "url": "https://www.ptt.cc/atom/Insurance.xml",
+    "keywords": "pain",
+    "why": "保險理賠爭議（注意 #10 已冷凍，只當線索）。"
+  },
+  {
+    "name": "PTT：BabyMother",
+    "tier": "社群",
+    "type": "feed",
+    "every_hours": 1,
+    "url": "https://www.ptt.cc/atom/BabyMother.xml",
+    "keywords": "pain",
+    "why": "育兒補助與規定，家長算不清楚的東西很多。"
+  },
+  {
+    "name": "PTT：PublicServan",
+    "tier": "社群",
+    "type": "feed",
+    "every_hours": 1,
+    "url": "https://www.ptt.cc/atom/PublicServan.xml",
+    "keywords": "pain",
+    "why": "公務員版：規定在第一線怎麼被執行、哪裡卡住。"
+  },
+  {
+    "name": "PTT：Salary",
+    "tier": "社群",
+    "type": "feed",
+    "every_hours": 1,
+    "url": "https://www.ptt.cc/atom/Salary.xml",
+    "keywords": "pain",
+    "why": "職場：勞基法、加班費、資遣費怎麼算。"
+  },
+  {
+    "name": "PTT：Hsinchu",
+    "tier": "社群",
+    "type": "feed",
+    "every_hours": 1,
+    "url": "https://www.ptt.cc/atom/Hsinchu.xml",
+    "keywords": "pain",
+    "why": "在地：竹北新竹生活與店家。"
   },
   {
     "name": "彰化縣消防局-暫行人員執業執照清冊",
+    "tier": "官方",
     "type": "numbers",
-    "enabled": false,
+    "enabled": true,
+    "every_hours": 24,
     "url": "https://www.chfd.gov.tw/form/index.aspx?Parser=3%2C9%2C324",
     "number_re": {
       "清冊筆數": "共\\s*(\\d[\\d,]*)\\s*筆"
     },
-    "why": "J-1 時間序列。落日前逐年往下掉的人數，只能靠比別人早開始記錄取得。"
+    "why": "J-1 時間序列。2028 落日前逐年往下掉的人數，只能靠比別人早開始記錄取得。"
   }
 ]
